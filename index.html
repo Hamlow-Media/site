@@ -52,7 +52,7 @@
   }
   img{max-width:100%;display:block;}
   a{color:inherit;}
-  section{position:relative;padding:5.5rem 1.5rem;max-width:1180px;margin:0 auto;}
+  section{position:relative;padding:5.5rem 1.5rem;max-width:1180px;margin:0 auto;scroll-margin-top:84px;}
   .eyebrow{
     font-family:var(--mono);
     font-size:0.72rem;
@@ -81,12 +81,16 @@
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
 
-  /* sprocket-hole divider */
+  /* sprocket-hole divider, styled after actual 35mm/8mm film perforations:
+     a dark filmstrip band with rounded-rect holes punched through it,
+     rather than plain dots. VHS tape itself has no visible perforations
+     (it's just smooth magnetic tape in a shell), so this leans on the
+     film-strip look, which is the one with a real physical reference. */
   .sprockets{
-    height:14px;
-    background-image:
-      radial-gradient(circle, var(--ash) 2.2px, transparent 2.3px);
-    background-size:22px 14px;
+    height:16px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='26' height='16'><rect width='26' height='16' fill='%2337352C'/><rect x='8' y='3' width='10' height='10' rx='2.5' fill='%23140f10'/></svg>");
+    background-repeat:repeat-x;
+    background-size:26px 16px;
     background-position:center;
     opacity:0.9;
   }
@@ -127,21 +131,36 @@
     min-height:82vh;
     display:flex;flex-direction:column;justify-content:center;
     padding-top:3rem;padding-bottom:3rem;
+    overflow:hidden;
   }
-  .rec-row{
+  .hero-video{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;z-index:0;
+  }
+  .hero-video-overlay{
+    position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg, rgba(20,15,16,0.55), rgba(20,15,16,0.88));
+  }
+  .hero > *:not(.hero-video):not(.hero-video-overlay){
+    position:relative;z-index:2;
+  }
+  .status-row{
     font-family:var(--mono);
     font-size:0.8rem;
     letter-spacing:0.12em;
+    text-transform:uppercase;
     color:var(--paper-dim);
     display:flex;align-items:center;gap:0.6rem;
     margin-bottom:1.6rem;
   }
-  .rec-dot{
-    width:8px;height:8px;border-radius:50%;
-    background:var(--red);
-    animation:pulse 1.6s infinite ease-in-out;
+  .reel-icon{
+    color:var(--red);
+    animation:spin 3s linear infinite;
   }
-  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.25;}}
+  @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+  @media (prefers-reduced-motion: reduce){
+    .reel-icon{animation:none;}
+  }
   .hero h1{
     font-family:var(--display);
     font-weight:400;
@@ -176,8 +195,8 @@
     position:relative;aspect-ratio:4/3;overflow:hidden;
     border:1px solid var(--ash);background:var(--surface);
   }
-  .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
-  .thumb:hover img{transform:scale(1.04);}
+  .thumb img, .thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+  .thumb:hover img, .thumb:hover video{transform:scale(1.04);}
   .thumb-placeholder{
     position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     text-align:center;padding:1rem;
@@ -242,8 +261,10 @@
   .service-desc{font-size:0.88rem;max-width:420px;}
   .service-price{
     font-family:var(--mono);font-size:0.78rem;color:var(--amber);
-    white-space:nowrap;align-self:center;
+    align-self:center;text-align:right;
   }
+  .service-price div{white-space:nowrap;margin-bottom:0.25rem;}
+  .service-price div:last-child{margin-bottom:0;}
 
   /* ============================================================
      CONTACT
@@ -330,14 +351,14 @@
 
      TO ADD OR CHANGE A PHOTO IN A GALLERY:
        - Add a new { title, image, caption } entry to the matching list
-         (production.work or restoration.work).
+         (digitization.work or restoration.work).
        - "image" is just a filename. Upload the actual photo into an
          "images" folder next to this file, using that exact filename.
        - Until a matching file exists, the site shows a placeholder
          instead of a broken image, so nothing looks broken while you work.
 
      TO ADD A VIDEO:
-       - Set "youtubeId" on a production.work entry to the ID from the
+       - Set "youtubeId" on a digitization.work entry to the ID from the
          YouTube URL (the part after watch?v=). Leave it blank ("") to
          skip the video link and just show the photo.
 
@@ -353,24 +374,27 @@ const CONTENT = {
     tagline: "Analog film, tape, and photo digitization & restoration. Based in Fort Dodge, IA."
   },
 
-  intro: "Hamlow Media is a one-person shop. Scanning and restoring old film, tape, and photos.",
+  intro: "Hamlow Media is a one-person shop based in Fort Dodge, IA. Every scan, transfer, and restoration is handled personally, start to finish, not outsourced to a lab or split across departments. Your family\u2019s memories go through one set of careful hands the whole way.",
 
-  production: {
+  digitization: {
     label: "Digitization",
-    heading: "Shot right, cut clean",
-    blurb: "",
+    heading: "Off the shelf, into a file",
+    blurb: "VHS, VHS-C, 8mm, 35mm negatives, slides, and prints, each scanned on hardware built for that specific format. A look at what actually comes off the source before any cleanup happens in restoration.",
     work: [
-      { title: "Full-Length Theater Production", image: "production-01.jpg", youtubeId: "", caption: "Three-camera live capture" },
-      { title: "Event Coverage", image: "production-02.jpg", youtubeId: "", caption: "" }
+      { title: "VHS / VHS-C", image: "digitization-vhs.mp4", youtubeId: "", caption: "" },
+      { title: "8mm Film", image: "digitization-8mm.mp4", youtubeId: "", caption: "" },
+      { title: "35mm Negatives", image: "digitization-35mm.jpg", youtubeId: "", caption: "" },
+      { title: "Slides", image: "digitization-slides.jpg", youtubeId: "", caption: "" },
+      { title: "Prints", image: "digitization-prints.jpg", youtubeId: "", caption: "" }
     ]
   },
 
   restoration: {
     label: "Restoration",
     heading: "Old media, brought back",
-    blurb: "Film negatives, slides, and 8mm home movies, scanned and restored. VHS and VHS-C tape is scanned and transferred as-is, there is not much that can be meaningfully restored once a tape has degraded. Photos cleaned up and colorized on request.",
+    blurb: "Scratches, dust, faded color, and physical damage repaired where the format allows, frame by frame for film, slides, and prints. VHS and VHS-C are scanned and transferred as-is, there is not much that can be meaningfully restored once a tape has degraded.",
     work: [
-      { title: "Family Slide Restoration", before: "restoration-01-before.jpg", after: "restoration-01-after.jpg" },
+      { title: "Photo (Print) Restoration", before: "restoration-print-before.jpg", after: "restoration-print-after.jpg" },
       { title: "Super 8 Film Restoration", before: "restoration-02-before.jpg", after: "restoration-02-after.jpg" }
     ]
   },
@@ -379,7 +403,7 @@ const CONTENT = {
     { num: "01", title: "Intake", desc: "Send in or drop off what you have. Any format, any condition*." },
     { num: "02", title: "Transfer", desc: "Scanned or captured at the highest quality the source allows." },
     { num: "03", title: "Restore", desc: "Cleanup and repair where the format allows, frame by frame for film, slides, and 8mm." },
-    { num: "04", title: "Deliver", desc: "Digital files handed back to you (USB Flash Drive or DVD). Originals returned safe." }
+    { num: "04", title: "Deliver", desc: "Digital files delivered via Dropbox link, USB flash drive, or DVD, whichever works best for you. Originals returned safe." }
   ],
 
   services: [
@@ -412,7 +436,25 @@ const CONTENT = {
 </header>
 
 <section class="hero">
-  <div class="rec-row"><span class="rec-dot"></span><span id="timecode">00:00:00:00</span>&nbsp;REC</div>
+  <!-- Background trailer clip. Add videos/trailer.mp4 (short, muted, looped) to
+       activate it. Until that file exists, this silently does nothing and the
+       plain dark background shows instead, nothing looks broken either way. -->
+  <video class="hero-video" id="hero-video" autoplay muted loop playsinline>
+    <source src="videos/trailer.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-overlay"></div>
+  <div class="status-row">
+    <svg class="reel-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.4">
+      <circle cx="12" cy="12" r="9"/>
+      <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+      <circle cx="12" cy="6" r="1.6" fill="currentColor" stroke="none"/>
+      <circle cx="17" cy="9.5" r="1.6" fill="currentColor" stroke="none"/>
+      <circle cx="15" cy="15.5" r="1.6" fill="currentColor" stroke="none"/>
+      <circle cx="9" cy="15.5" r="1.6" fill="currentColor" stroke="none"/>
+      <circle cx="7" cy="9.5" r="1.6" fill="currentColor" stroke="none"/>
+    </svg>
+    <span>Rolling</span>
+  </div>
   <h1 id="hero-h1"></h1>
   <p class="tagline" id="hero-tagline"></p>
   <div class="scroll-cue">Scroll ↓</div>
@@ -424,7 +466,7 @@ const CONTENT = {
   <p class="lede" id="intro-text" style="font-size:1.15rem;color:var(--paper);"></p>
 </section>
 
-<section class="pillar reveal" id="digitization"></section>
+<section class="pillar reveal" id="digitization">
   <div class="eyebrow digitization">— <span id="prod-label"></span></div>
   <h2 id="prod-heading"></h2>
   <p class="lede" id="prod-blurb"></p>
@@ -463,7 +505,7 @@ const CONTENT = {
     <p><strong>Old media is fragile, and some of it arrives already damaged.</strong> Tapes (VHS &  VHS-C) and film (35mm & 8mm) that have sat in a basement, attic, or garage for decades can suffer from things like sticky-shed syndrome, mold, brittleness, and warping, long before they ever reach me. Running that kind of media through a player or scanner carries some inherent risk of further damage or breakage, even when handled carefully and with well-maintained equipment.</p>
     <p>By sending in tape or film, you're acknowledging that Hamlow Media is not responsible for pre-existing damage or deterioration, or for damage that occurs during transfer as a direct result of that pre-existing condition. I'll always let you know before I start if a piece looks especially fragile, and I take every reasonable precaution to protect your originals.</p>
     <p>Prints, negatives, and slides carry much less of this risk since they're digitized on a flatbed scanner with no moving mechanical transport involved, but the same general principle applies to anything already damaged before it arrives.</p>
-    <p style="font-size:0.85rem;color:var(--paper-dim);"></p>
+    <p style="font-size:0.85rem;color:var(--paper-dim);">This is a general summary, not a legal contract, and isn't legal advice.</p>
   </div>
 </section>
 
@@ -520,9 +562,9 @@ const CONTENT = {
   document.getElementById('hero-tagline').textContent = CONTENT.hero.tagline;
   document.getElementById('intro-text').textContent = CONTENT.intro;
 
-  document.getElementById('prod-label').textContent = CONTENT.production.label;
-  document.getElementById('prod-heading').textContent = CONTENT.production.heading;
-  document.getElementById('prod-blurb').textContent = CONTENT.production.blurb;
+  document.getElementById('prod-label').textContent = CONTENT.digitization.label;
+  document.getElementById('prod-heading').textContent = CONTENT.digitization.heading;
+  document.getElementById('prod-blurb').textContent = CONTENT.digitization.blurb;
 
   document.getElementById('rest-label').textContent = CONTENT.restoration.label;
   document.getElementById('rest-heading').textContent = CONTENT.restoration.heading;
@@ -537,17 +579,25 @@ const CONTENT = {
     return '<div class="thumb-placeholder">' + label + '</div>';
   }
 
-  // production grid
+  // digitization grid
   var prodGrid = document.getElementById('prod-grid');
-  CONTENT.production.work.forEach(function(item){
-    var hasVideo = item.youtubeId && item.youtubeId.length > 0;
+  CONTENT.digitization.work.forEach(function(item){
+    var hasYoutubeLink = item.youtubeId && item.youtubeId.length > 0;
+    // A .mp4 or .webm filename gets an inline looping preview clip instead of
+    // a static photo. This is separate from youtubeId above, that one is for
+    // linking out to a full video on YouTube, this is a short silent loop
+    // that plays right in the tile, used for the VHS and 8mm samples.
+    var isClip = /\.(mp4|webm)$/i.test(item.image);
+    var mediaTag = isClip
+      ? '<video src="images/' + item.image + '" autoplay muted loop playsinline onerror="this.style.display=\'none\'"></video>'
+      : '<img src="images/' + item.image + '" alt="' + item.title + '" loading="lazy" onerror="this.style.display=\'none\'">';
     var el = document.createElement('div');
-    el.className = 'thumb' + (hasVideo ? ' has-video' : '');
+    el.className = 'thumb' + (hasYoutubeLink ? ' has-video' : '');
     el.innerHTML =
       placeholderHTML('IMAGES/' + item.image.toUpperCase()) +
-      '<img src="images/' + item.image + '" alt="' + item.title + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+      mediaTag +
       '<div class="thumb-cap">' + item.title + '</div>';
-    if (hasVideo) {
+    if (hasYoutubeLink) {
       el.style.cursor = 'pointer';
       el.addEventListener('click', function(){
         window.open('https://www.youtube.com/watch?v=' + item.youtubeId, '_blank');
@@ -590,31 +640,22 @@ const CONTENT = {
   CONTENT.services.forEach(function(s){
     var row = document.createElement('div');
     row.className = 'service-row';
+    var priceLines = s.price.split('|').map(function(p){ return p.trim(); });
+    var priceHTML = priceLines.map(function(p){ return '<div>' + p + '</div>'; }).join('');
     row.innerHTML =
       '<div><div class="service-name">' + s.name + '</div>' +
       '<div class="service-desc">' + s.desc + '</div></div>' +
-      '<div class="service-price">' + s.price + '</div>';
+      '<div class="service-price">' + priceHTML + '</div>';
     svcList.appendChild(row);
   });
 
-  // ---------- timecode ticker ----------
-  var start = Date.now();
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function pad(n){ return String(n).padStart(2,'0'); }
-  function tick(){
-    var elapsed = Date.now() - start;
-    var totalFrames = Math.floor(elapsed / 1000 * 24);
-    var frames = totalFrames % 24;
-    var totalSeconds = Math.floor(elapsed/1000);
-    var s = totalSeconds % 60;
-    var m = Math.floor(totalSeconds/60) % 60;
-    var h = Math.floor(totalSeconds/3600);
-    document.getElementById('timecode').textContent =
-      pad(h)+':'+pad(m)+':'+pad(s)+':'+pad(frames);
+  // ---------- hero background video (graceful no-op if the file is missing) ----------
+  var heroVideo = document.getElementById('hero-video');
+  if (heroVideo) {
+    heroVideo.addEventListener('error', function(){ heroVideo.style.display = 'none'; }, true);
   }
-  tick();
-  if(!reduceMotion){ setInterval(tick, 1000/24); }
-  else { setInterval(tick, 1000); }
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---------- scroll reveal ----------
   var observer = new IntersectionObserver(function(entries){
