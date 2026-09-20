@@ -164,9 +164,9 @@
   .reveal.in{opacity:1;transform:translateY(0);}
 
   /* ============================================================
-     PILLAR SECTIONS (Production / Restoration)
+     PILLAR SECTIONS (Digitization / Restoration)
   ============================================================ */
-  .pillar .eyebrow.production{color:var(--red);}
+  .pillar .eyebrow.digitization{color:var(--red);}
   .pillar .eyebrow.restoration{color:var(--teal);}
   .pillar-grid{
     display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
@@ -350,13 +350,13 @@ const CONTENT = {
   hero: {
     headline: "HAMLOW",
     headlineAccent: "MEDIA",
-    tagline: "Video production and analog film, tape, and photo restoration. Based in Fort Dodge, IA."
+    tagline: "Analog film, tape, and photo digitization & restoration. Based in Fort Dodge, IA."
   },
 
-  intro: "Hamlow Media is a one-person shop. Multi-camera live production and color work on one side, scanning and restoring old film, tape, and photos on the other. Different tools, same instinct: get the image right.",
+  intro: "Hamlow Media is a one-person shop. Scanning and restoring old film, tape, and photos.",
 
   production: {
-    label: "Production",
+    label: "Digitization",
     heading: "Shot right, cut clean",
     blurb: "Live multi-camera coverage, cut clean, with audio cleanup that does not bury the room in noise.",
     work: [
@@ -368,7 +368,7 @@ const CONTENT = {
   restoration: {
     label: "Restoration",
     heading: "Old media, brought back",
-    blurb: "Film negatives, slides, and 8mm/Super 8 home movies, scanned and restored. VHS and Hi8 tape is scanned and transferred as-is, there is not much that can be meaningfully restored once a tape has degraded. Photos cleaned up and colorized on request.",
+    blurb: "Film negatives, slides, and 8mm home movies, scanned and restored. VHS and VHS-C tape is scanned and transferred as-is, there is not much that can be meaningfully restored once a tape has degraded. Photos cleaned up and colorized on request.",
     work: [
       { title: "Family Slide Restoration", before: "restoration-01-before.jpg", after: "restoration-01-after.jpg" },
       { title: "Super 8 Film Restoration", before: "restoration-02-before.jpg", after: "restoration-02-after.jpg" }
@@ -400,9 +400,10 @@ const CONTENT = {
 <!-- ============================== END CONTENT ============================== -->
 
 <header class="topbar">
-  <div class="wordmark">HAMLOW<span>·</span>MEDIA</div>
+  <div class="wordmark">HAMLOW<span> - </span>MEDIA</div>
   <nav class="links">
     <a href="#work">Work</a>
+    <a href="#digitization">Digitization</a>
     <a href="#restoration">Restoration</a>
     <a href="#process">Process</a>
     <a href="#services">Services</a>
@@ -425,7 +426,7 @@ const CONTENT = {
 </section>
 
 <section class="pillar reveal" id="work">
-  <div class="eyebrow production">— <span id="prod-label"></span></div>
+  <div class="eyebrow digitization">— <span id="prod-label"></span></div>
   <h2 id="prod-heading"></h2>
   <p class="lede" id="prod-blurb"></p>
   <div class="pillar-grid" id="prod-grid"></div>
