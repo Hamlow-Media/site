@@ -223,7 +223,11 @@
     border:1px solid var(--ash);background:var(--surface);padding:0.9rem;
   }
   .compare-imgs{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;}
-  .compare-imgs .thumb{aspect-ratio:1/1;}
+  .compare-imgs .thumb{aspect-ratio:auto;min-height:120px;}
+  .compare-imgs .thumb img{
+    position:relative;inset:auto;width:100%;height:auto;
+    object-fit:contain;
+  }
   .compare-tags{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.4rem;}
   .compare-tags span{
     font-family:var(--mono);font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;
@@ -396,7 +400,7 @@ const CONTENT = {
     work: [
       { title: "Photo (Print) Restoration", before: "restoration-print-before.jpg", after: "restoration-print-after.jpg" },
       { title: "Photo Colorization", before: "restoration-color-before.jpg", after: "restoration-color-after.jpg" },
-      { title: "Super 8 Film Restoration", before: "restoration-02-before.jpg", after: "restoration-02-after.jpg" }
+      { title: "Super 8 Film Restoration", before: "restoration-before.mp4", after: "restoration-after.mp4" }
     ]
   },
 
