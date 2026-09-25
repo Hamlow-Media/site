@@ -223,10 +223,11 @@
     border:1px solid var(--ash);background:var(--surface);padding:0.9rem;
   }
   .compare-imgs{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;}
-  .compare-imgs .thumb{aspect-ratio:auto;min-height:120px;}
-  .compare-imgs .thumb img{
+  .compare-imgs .thumb{aspect-ratio:auto;}
+  .compare-imgs .thumb img, .compare-imgs .thumb video{
     position:relative;inset:auto;width:100%;height:auto;
     object-fit:contain;
+    display:block;
   }
   .compare-tags{display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.4rem;}
   .compare-tags span{
@@ -484,7 +485,7 @@ const CONTENT = {
   <div class="eyebrow restoration">— <span id="rest-label"></span></div>
   <h2 id="rest-heading"></h2>
   <p class="lede" id="rest-blurb"></p>
-  <div class="pillar-grid" id="rest-grid" style="grid-template-columns:repeat(auto-fill,minmax(320px,1fr));"></div>
+  <div class="pillar-grid" id="rest-grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));"></div>
 </section>
 
 <div class="sprockets"></div>
@@ -584,6 +585,13 @@ const CONTENT = {
     return '<div class="thumb-placeholder">' + label + '</div>';
   }
 
+  function compareMediaHTML(filename, alt){
+    var isClip = /\.(mp4|webm)$/i.test(filename);
+    return isClip
+      ? '<video src="images/' + filename + '" autoplay muted loop playsinline onerror="this.style.display=\'none\'"></video>'
+      : '<img src="images/' + filename + '" alt="' + alt + '" loading="lazy" onerror="this.style.display=\'none\'">';
+  }
+
   // digitization grid
   var prodGrid = document.getElementById('prod-grid');
   CONTENT.digitization.work.forEach(function(item){
@@ -619,9 +627,9 @@ const CONTENT = {
     card.innerHTML =
       '<div class="compare-imgs">' +
         '<div class="thumb">' + placeholderHTML('IMAGES/' + item.before.toUpperCase()) +
-          '<img src="images/' + item.before + '" alt="' + item.title + ' before" loading="lazy" onerror="this.style.display=\'none\'"></div>' +
+          compareMediaHTML(item.before, item.title + ' before') + '</div>' +
         '<div class="thumb">' + placeholderHTML('IMAGES/' + item.after.toUpperCase()) +
-          '<img src="images/' + item.after + '" alt="' + item.title + ' after" loading="lazy" onerror="this.style.display=\'none\'"></div>' +
+          compareMediaHTML(item.after, item.title + ' after') + '</div>' +
       '</div>' +
       '<div class="compare-tags"><span>Before</span><span>After</span></div>' +
       '<div class="compare-title">' + item.title + '</div>';
